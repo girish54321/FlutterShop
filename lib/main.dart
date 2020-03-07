@@ -13,6 +13,7 @@ import 'MyNetworlImage.dart';
 import 'banerView.dart';
 import 'body.dart';
 import 'modal/Baners.dart';
+import 'modal/TrandingClothes.dart';
 import 'network_utils/api.dart';
 
 void main() => runApp(MyApp());
@@ -42,11 +43,13 @@ class _ShopingHomeState extends State<ShopingHome> {
   List<Baner> banerList;
   List<Widget> banerswidget = [];
   PageController pageController;
+  List<TrandingClothe> trandingClothesList;
 
   @override
   void initState() {
     pageController = PageController(initialPage: 2);
     _getBaners();
+    _produts();
     super.initState();
   }
 
@@ -60,7 +63,7 @@ class _ShopingHomeState extends State<ShopingHome> {
     setState(() {
       _isLoading = true;
     });
-    var res = await Network().getData('https://api.myjson.com/bins/82haw');
+    var res = await Network().getData('http://www.mocky.io/v2/5e63b23c3600007100e8dd77');
     var body = json.decode(res.body);
     print("BANERS PLZ========================================");
     print(res.statusCode);
@@ -73,6 +76,28 @@ class _ShopingHomeState extends State<ShopingHome> {
           imageUrl: banerResones.baners[map.key].imageUrl,bluerCode: banerResones.baners[map.key].blurhash,
         );
       }).toList();
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _produts() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var res = await Network().getData('http://www.mocky.io/v2/5e63b50a3600005f00e8dd80');
+    var body = json.decode(res.body);
+    print("BANERS PLZ========================================");
+    print(res.statusCode);
+
+    if (res.statusCode == 200) {
+      TrandingClothes trandingClothe = new TrandingClothes.fromJson(body);
+      trandingClothesList = trandingClothe.trandingClothes;
       setState(() {
         _isLoading = false;
       });
@@ -179,7 +204,7 @@ class _ShopingHomeState extends State<ShopingHome> {
                       scrollDirection: Axis.horizontal,
                       itemCount: banerList.length,
                       itemBuilder: (context, index) {
-                        Baner b = banerList[index];
+                        TrandingClothe b = trandingClothesList[index];
                         return TrandingView(
                           image: b.imageUrl,bluerCode: b.blurhash,
                         );
